@@ -215,7 +215,7 @@ void minethd::work_main()
 	uint64_t iCount = 0;
 	cryptonight_ctx* cpu_ctx;
 	cpu_ctx = cpu::minethd::minethd_alloc_ctx();
-	cn_hash_fun hash_fun = cpu::minethd::func_selector(::jconf::inst()->HaveHardwareAes(), true /*bNoPrefetch*/, ::jconf::inst()->IsCurrencyMonero());
+	cn_hash_fun hash_fun = cpu::minethd::func_selector(1, ::jconf::inst()->HaveHardwareAes(), true /*bNoPrefetch*/, ::jconf::inst()->IsCurrencyMonero());
 	uint32_t iNonce;
 
 	globalStates::inst().iConsumeCnt++;
@@ -282,7 +282,7 @@ void minethd::work_main()
 
 				*(uint32_t*)(bWorkBlob + 39) = foundNonce[i];
 
-				hash_fun(bWorkBlob, oWork.iWorkSize, bResult, cpu_ctx);
+				hash_fun(bWorkBlob, oWork.iWorkSize, bResult, &cpu_ctx);
 				if ( (*((uint64_t*)(bResult + 24))) < oWork.iTarget)
 					executor::inst()->push_event(ex_event(job_result(oWork.sJobID, foundNonce[i], bResult, iThreadNo), oWork.iPoolId));
 				else
